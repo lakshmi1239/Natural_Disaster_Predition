@@ -42,7 +42,7 @@ def get_location_name(latitude, longitude):
     except Exception as e:
         return f"Error: {str(e)}"
 
-st.title("Natural Prediction System")
+st.title("Natural Disasters Prediction System")
 st.write("This system predicts Flood Risk, Landscape Type, or Storm based on environmental data.")
 
 prediction_type = st.selectbox("Select Prediction Type", ["Flood Prediction", "Landscape Prediction", "Storm Prediction"])
