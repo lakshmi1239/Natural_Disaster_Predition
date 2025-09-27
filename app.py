@@ -1,14 +1,7 @@
 import streamlit as st
 import numpy as np
 from joblib import load
-
-
-
-
-
-import streamlit as st
 import pandas as pd
-import numpy as np
 import pickle
 from geopy.geocoders import Nominatim
 from sklearn.preprocessing import StandardScaler
@@ -55,36 +48,19 @@ st.write("This system predicts Flood Risk, Landscape Type, or Storm based on env
 prediction_type = st.selectbox("Select Prediction Type", ["Flood Prediction", "Landscape Prediction", "Storm Prediction"])
 
 if prediction_type == "Flood Prediction":
-    st.set_page_config(page_title="🌊 Flood Prediction", page_icon="🌊", layout="centered")
+    st.subheader("Flood Prediction")
+    rainwater_level = st.number_input("Rainwater Level (cm)", min_value=0.0)
+    soil_moisture = st.number_input("Soil Moisture (%)", min_value=0.0, max_value=100.0)
+    dam_releases = st.number_input("Dam Releases (m³/s)", min_value=0.0)
+    temperature = st.number_input("Temperature (°C)", min_value=-50.0, max_value=50.0)
+    humidity = st.number_input("Humidity (%)", min_value=0.0, max_value=100.0)
+    if st.button("Predict Flood Risk"):
+        result = predict_flood(rainwater_level, soil_moisture, dam_releases, temperature, humidity)
+        if result == 1:
+            st.error("Flood Risk: High! Take precautions immediately.")
+        else:
+            st.success("Flood Risk: Low. No immediate threat.")
 
-
-@st.cache_resource
-def load_model(path):
-    return load(path)
-
-flood_model = load_model("models/flood_model.pkl")
-
-
-st.title("🌊 Flood Prediction App")
-st.write("This app predicts the risk of flood occurrence.")
-
-
-st.info(f"ℹ️ Model expects **{flood_model.n_features_in_}** features.")
-
-
-inputs = []
-for i in range(flood_model.n_features_in_):
-    value = st.number_input(f"Feature {i+1}", value=0.0, step=0.1)
-    inputs.append(value)
-
-if st.button("🔍 Predict"):
-    input_data = np.array([inputs])  # 2D array
-    prediction = flood_model.predict(input_data)
-
-    if prediction[0] == 1:
-        st.error("⚠️ High Risk of Flood!")
-    else:
-        st.success("✅ Low Risk of Flood.")
 
 elif prediction_type == "Landscape Prediction":
     st.subheader("Landscape Type Prediction")
