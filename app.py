@@ -71,7 +71,10 @@ elif prediction_type == "Landscape Prediction":
     soil_moisture = st.number_input("Soil Moisture (%)", min_value=0.0, max_value=100.0)
     if st.button("Predict Landscape Type"):
         result = predict_landscape(elevation, rainfall, temperature, vegetation_index, soil_moisture)
-        st.success(f"Predicted Landscape Type: {result}")
+        if result == 1:
+            st.error("Landscape Risk: High! Take precautions immediately.")
+        else:
+            st.success("Landscape Risk: Low. No immediate threat.")
 
 elif prediction_type == "Storm Prediction":
     st.subheader("Storm Prediction")
