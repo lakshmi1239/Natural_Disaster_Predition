@@ -3,7 +3,7 @@ import numpy as np
 from joblib import load
 
 # ---------------------------
-# Page Config (must be first Streamlit command)
+# Page Config
 # ---------------------------
 st.set_page_config(page_title="🌊 Flood Prediction", page_icon="🌊", layout="centered")
 
@@ -20,16 +20,19 @@ flood_model = load_model("models/flood_model.pkl")
 # UI
 # ---------------------------
 st.title("🌊 Flood Prediction App")
+st.write("This app predicts the risk of flood occurrence.")
 
-st.write("Enter environmental data to predict flood risk:")
+# Debug: Show how many features model expects
+st.info(f"ℹ️ Model expects **{flood_model.n_features_in_}** features.")
 
-rainfall = st.number_input("🌧️ Rainfall (mm)", min_value=0.0, step=0.1)
-temperature = st.number_input("🌡️ Temperature (°C)", min_value=-10.0, step=0.1)
-humidity = st.number_input("💧 Humidity (%)", min_value=0.0, max_value=100.0, step=0.1)
-river_level = st.number_input("🌊 River Water Level (m)", min_value=0.0, step=0.1)
+# Example: let’s create input fields dynamically
+inputs = []
+for i in range(flood_model.n_features_in_):
+    value = st.number_input(f"Feature {i+1}", value=0.0, step=0.1)
+    inputs.append(value)
 
 if st.button("🔍 Predict"):
-    input_data = np.array([[rainfall, temperature, humidity, river_level]])
+    input_data = np.array([inputs])  # 2D array
     prediction = flood_model.predict(input_data)
 
     if prediction[0] == 1:
